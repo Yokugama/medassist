@@ -420,6 +420,7 @@ from fastapi.staticfiles import StaticFiles
 
 app.mount("/css", StaticFiles(directory=str(FRONTEND / "css")), name="css")
 app.mount("/js",  StaticFiles(directory=str(FRONTEND / "js")),  name="js")
+app.mount("/img", StaticFiles(directory=str(FRONTEND / "img")), name="img")
 
 # ── Clean URL routes ────────────────────────────────────────────────────────────
 @app.get("/")
