@@ -1,0 +1,41 @@
+/* ── Auth layout ── */
+body { display: flex; align-items: center; justify-content: center; padding: 1rem; }
+.auth-wrap { width: 100%; max-width: 420px; }
+.auth-card { background: #fff; border: 1px solid var(--g100); border-radius: 16px; padding: 2.25rem 2rem; }
+
+/* Logo */
+.auth-logo { display: flex; align-items: center; gap: 12px; margin-bottom: 1.75rem; }
+.auth-logo-icon { width: 40px; height: 40px; background: var(--b800); border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.auth-logo-icon svg { width: 22px; height: 22px; }
+.auth-logo-name { font-size: 1.125rem; font-weight: 700; color: var(--b800); }
+.auth-logo-sub  { font-size: .75rem; color: var(--g500); margin-top: 1px; }
+
+/* Tabs */
+.auth-tabs { display: flex; border-bottom: 2px solid var(--g100); margin-bottom: 1.5rem; }
+.auth-tab {
+  flex: 1; padding: 10px; text-align: center;
+  font-size: .875rem; font-weight: 500; color: var(--g500);
+  border: none; background: none; cursor: pointer;
+  border-bottom: 2px solid transparent; margin-bottom: -2px;
+  transition: color .15s, border-color .15s;
+}
+.auth-tab.active { color: var(--b800); border-bottom-color: var(--b800); }
+
+/* Screens */
+.auth-screen { display: none; }
+.auth-screen.active { display: block; }
+
+/* Submit */
+.auth-submit {
+  width: 100%; padding: 12px; background: var(--b800); color: #fff;
+  border: none; border-radius: var(--radius);
+  font-size: .9375rem; font-weight: 600; margin-top: .375rem;
+  transition: background .15s;
+}
+.auth-submit:hover { background: var(--b900); }
+.auth-submit:disabled { opacity: .6; cursor: not-allowed; }
+
+/* Mobile */
+@media (max-width: 480px) {
+  .auth-card { padding: 1.75rem 1.25rem; }
+}

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <title>MedAssist AI — Вход</title>
+  <link rel="stylesheet" href="/css/base.css">
+  <link rel="stylesheet" href="/css/auth.css">
+</head>
+<body>
+<main class="auth-wrap">
+  <div class="auth-card">
+
+    <div class="auth-logo">
+      <div class="auth-logo-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2">
+          <path d="M12 2a10 10 0 100 20A10 10 0 0012 2zm0 5v4m0 0h4m-4 0H8"/>
+        </svg>
+      </div>
+      <div>
+        <div class="auth-logo-name">MedAssist AI</div>
+        <div class="auth-logo-sub">Медицинский триаж</div>
+      </div>
+    </div>
+
+    <div class="auth-tabs" role="tablist">
+      <button class="auth-tab active" role="tab" aria-selected="true"
+              id="tab-login" onclick="switchTab('login')">Вход</button>
+      <button class="auth-tab" role="tab" aria-selected="false"
+              id="tab-register" onclick="switchTab('register')">Регистрация</button>
+    </div>
+
+    <div class="alert alert-danger" id="err" role="alert" aria-live="polite"></div>
+
+    <section class="auth-screen active" id="sc-login" role="tabpanel">
+      <form onsubmit="doLogin(event)" novalidate>
+        <div class="field">
+          <label for="l-user">Имя пользователя</label>
+          <input id="l-user" type="text" autocomplete="username"
+                 placeholder="Введите имя пользователя" required>
+        </div>
+        <div class="field">
+          <label for="l-pass">Пароль</label>
+          <input id="l-pass" type="password" autocomplete="current-password"
+                 placeholder="Введите пароль" required>
+        </div>
+        <button type="submit" class="auth-submit" id="btn-login">Войти</button>
+      </form>
+    </section>
+
+    <section class="auth-screen" id="sc-register" role="tabpanel">
+      <form onsubmit="doRegister(event)" novalidate>
+        <div class="field">
+          <label for="r-user">Имя пользователя</label>
+          <input id="r-user" type="text" autocomplete="username"
+                 placeholder="Минимум 3 символа" required minlength="3">
+        </div>
+        <div class="field">
+          <label for="r-email">Email</label>
+          <input id="r-email" type="email" autocomplete="email"
+                 placeholder="example@mail.com" required>
+        </div>
+        <div class="field">
+          <label for="r-pass">Пароль</label>
+          <input id="r-pass" type="password" autocomplete="new-password"
+                 placeholder="Минимум 6 символов" required minlength="6">
+        </div>
+        <button type="submit" class="auth-submit" id="btn-register">Создать аккаунт</button>
+      </form>
+    </section>
+
+  </div>
+</main>
+
+<script src="/js/utils.js"></script>
+<script>
+function switchTab(t) {
+  document.querySelectorAll('.auth-tab').forEach(x => { x.classList.remove('active'); x.setAttribute('aria-selected','false'); });
+  document.querySelectorAll('.auth-screen').forEach(x => x.classList.remove('active'));
+  document.getElementById('tab-'+t).classList.add('active');
+  document.getElementById('tab-'+t).setAttribute('aria-selected','true');
+  document.getElementById('sc-'+t).classList.add('active');
+  showErr('');
+}
+
+function showErr(msg) {
+  const e = document.getElementById('err');
+  e.textContent = msg; e.classList.toggle('show', !!msg);
+}
+
+function setBtn(id, loading, label) {
+  const b = document.getElementById(id);
+  b.disabled = loading; b.textContent = loading ? 'Подождите...' : label;
+}
+
+async function doLogin(e) {
+  e.preventDefault();
+  const u = document.getElementById('l-user').value.trim();
+  const p = document.getElementById('l-pass').value;
+  if (!u || !p) { showErr('Заполните все поля'); return; }
+  setBtn('btn-login', true, 'Войти');
+  try {
+    const r = await fetch('/api/auth/login', {
+      method: 'POST', credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username: u, password: p })
+    });
+    const d = await r.json();
+    if (!r.ok) { showErr(d.detail || 'Ошибка входа'); return; }
+    localStorage.setItem('session_token', d.token);
+    localStorage.setItem('username', d.username);
+    localStorage.setItem('role', d.role);
+    window.location.href = d.role === 'admin' ? '/dashboard' : '/chat';
+  } catch { showErr('Нет соединения с сервером'); }
+  finally { setBtn('btn-login', false, 'Войти'); }
+}
+
+async function doRegister(e) {
+  e.preventDefault();
+  const u  = document.getElementById('r-user').value.trim();
+  const em = document.getElementById('r-email').value.trim();
+  const p  = document.getElementById('r-pass').value;
+  if (!u || !em || !p) { showErr('Заполните все поля'); return; }
+  if (u.length < 3) { showErr('Имя пользователя — минимум 3 символа'); return; }
+  if (p.length < 6) { showErr('Пароль — минимум 6 символов'); return; }
+  setBtn('btn-register', true, 'Создать аккаунт');
+  try {
+    const r = await fetch('/api/auth/register', {
+      method: 'POST', credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username: u, email: em, password: p })
+    });
+    const d = await r.json();
+    if (!r.ok) { showErr(d.detail || 'Ошибка регистрации'); return; }
+    localStorage.setItem('session_token', d.token);
+    localStorage.setItem('username', d.username);
+    localStorage.setItem('role', d.role);
+    window.location.href = '/chat';
+  } catch { showErr('Нет соединения с сервером'); }
+  finally { setBtn('btn-register', false, 'Создать аккаунт'); }
+}
+</script>
+</body>
+</html>
