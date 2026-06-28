@@ -183,17 +183,18 @@ tbody tr:hover td { background: var(--g50); }
     padding-bottom: 80px;
   }
   .chat-input-bar {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: 50;
-    background: #fff;
-    padding: 10px 16px;
-    padding-bottom: env(safe-area-inset-bottom, 10px);
-    border-top: 1px solid var(--g100);
-  }
-  .chat-textarea {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  background: #fff;
+  padding: 10px 16px;
+  padding-bottom: env(safe-area-inset-bottom, 20px); /* было 10px, стало 20px */
+  border-top: 1px solid var(--g100);
+  margin-bottom: 10px; /* добавь эту строку */
+}
+  .chat-textarea {  
     font-size: 16px;
   }
 }
