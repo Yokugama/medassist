@@ -167,3 +167,33 @@ tbody tr:hover td { background: var(--g50); }
 @media (max-width: 480px) {
   .metrics-grid { grid-template-columns: 1fr 1fr; }
 }
+
+/* ── Mobile chat fix ── */
+@media (max-width: 768px) {
+  .dashboard {
+    height: 100dvh;
+  }
+  #screen-chat {
+    display: flex;
+    flex-direction: column;
+  }
+  .chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding-bottom: 80px;
+  }
+  .chat-input-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 50;
+    background: #fff;
+    padding: 10px 16px;
+    padding-bottom: env(safe-area-inset-bottom, 10px);
+    border-top: 1px solid var(--g100);
+  }
+  .chat-textarea {
+    font-size: 16px;
+  }
+}
