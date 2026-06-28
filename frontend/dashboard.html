@@ -6,7 +6,7 @@
   <title>MedAssist AI — Администратор</title>
   <link rel="stylesheet" href="/css/base.css">
   <link rel="stylesheet" href="/css/dashboard.css">
-  <link rel="icon" type="image/png" href="/img/logo.png">
+  <link rel="icon" type="image/png" href="/img/medassist_logo.png">
 </head>
 <body>
 
@@ -15,7 +15,7 @@
 <aside class="sidebar" id="sidebar">
   <div class="sidebar-logo">
     <div class="sidebar-logo-icon">
-      <img src="/img/logo.png" width="22" height="22" alt="logo">
+      <img src="/img/medassist_logo.png" width="22" height="22" alt="logo">
     </div>
     <div class="sidebar-logo-name">MedAssist AI</div>
     <div class="sidebar-logo-badge">Администратор</div>
@@ -226,7 +226,9 @@ async function loadUsers() {
       const ban = u.active
         ? `<button class="act-btn act-ban"   onclick="updateUser('${u.id}',{active:false})">Блок</button>`
         : `<button class="act-btn act-unban" onclick="updateUser('${u.id}',{active:true})">Разблок</button>`;
-      const adm = u.role !== 'admin' ? `<button class="act-btn act-admin" onclick="updateUser('${u.id}',{role:'admin'})">Admin</button>` : '';
+      const adm = u.role !== 'admin' 
+        ? `<button class="act-btn act-admin" onclick="updateUser('${u.id}',{role:'admin'})">Admin</button>`
+        : `<button class="act-btn act-delete" onclick="updateUser('${u.id}',{role:'user'})">Убрать admin</button>`;
       const del = `<button class="act-btn act-delete" onclick="delUser('${u.id}','${esc(u.username)}')">Удалить</button>`;
       return `<tr><td class="td-primary">${esc(u.username)}</td><td class="td-muted">${esc(u.email)}</td><td>${rb}</td><td class="td-muted">${fmt(u.query_count)}</td><td>${sb}</td><td><div class="actions">${ban}${adm}${del}</div></td></tr>`;
     }).join('');
